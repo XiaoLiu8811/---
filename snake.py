@@ -99,7 +99,7 @@ class Food:
         """
         self.grid_width = grid_width
         self.grid_height = grid_height
-        self.position = self.randomize_position()  # 随机生成初始位置
+        self.pos = self.randomize_position()  # 随机生成初始位置
         # 创建食物的表面对象并设置颜色
         self.surface = pygame.Surface((20, 20))
         self.surface.fill((255, 0, 0))  # 设置为红色
@@ -110,7 +110,7 @@ class Food:
         Args:
             window: pygame窗口对象
         """
-        food_rect = pygame.Rect(self.position.x * 20, self.position.y * 20, 20, 20)
+        food_rect = pygame.Rect(self.pos.x * 20, self.pos.y * 20, 20, 20)
         window.blit(self.surface, food_rect)
     
     def randomize_position(self):
@@ -119,4 +119,5 @@ class Food:
         Returns:
             Vector2: 新的食物位置坐标
         """
-        return Vector2(randint(0, self.grid_width - 1), randint(0, self.grid_height - 1))
+        self.pos = Vector2(randint(0, self.grid_width - 1), randint(0, self.grid_height - 1))
+        return self.pos

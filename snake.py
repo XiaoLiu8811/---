@@ -13,15 +13,21 @@ class Snake:
         self.new_block = False          # 是否需要增加新的身体节点
         
         # 创建并设置蛇头的不同方向的图像
-        self.head_up = pygame.Surface((20, 20))
-        self.head_up.fill((0, 255, 0))  # 设置蛇头颜色
+        self.head_up = pygame.Surface((20, 20), pygame.SRCALPHA)  # Add transparency support
+        # Draw triangle pointing upward
+        pygame.draw.polygon(self.head_up, (255, 0, 0), [
+            (10, 2),     # Top point
+            (2, 18),     # Bottom left
+            (18, 18)     # Bottom right
+        ])
         # 通过旋转创建其他方向的蛇头图像
         self.head_down = pygame.transform.rotate(self.head_up, 180)
         self.head_right = pygame.transform.rotate(self.head_up, -90)
         self.head_left = pygame.transform.rotate(self.head_up, 90)
         
         # 创建并设置蛇身体的图像
-        self.body_surface = pygame.Surface((20, 20))
+        self.body_surface = pygame.Surface((20, 20), pygame.SRCALPHA)  # Add transparency
+        pygame.draw.circle(self.body_surface, (0, 200, 0), (10, 10), 9)  # Draw circle with radius 9
         self.body_surface.fill((0, 200, 0))  # 设置蛇身颜色
     
     def draw(self, window):

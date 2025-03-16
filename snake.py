@@ -28,7 +28,6 @@ class Snake:
         # 创建并设置蛇身体的图像
         self.body_surface = pygame.Surface((20, 20), pygame.SRCALPHA)  # Add transparency
         pygame.draw.circle(self.body_surface, (0, 200, 0), (10, 10), 9)  # Draw circle with radius 9
-        self.body_surface.fill((0, 200, 0))  # 设置蛇身颜色
     
     def draw(self, window):
         """在窗口上绘制蛇"""

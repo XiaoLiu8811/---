@@ -18,6 +18,7 @@ GRID_HEIGHT = WINDOW_HEIGHT // GRID_SIZE  # 纵向网格数量
 # 颜色定义（RGB格式）
 BLACK = (0, 0, 0)      # 背景色
 WHITE = (255, 255, 255) # 文本色
+GRAY = (128, 128, 128)  #Unselected wold color
 RED = (255, 0, 0)      # 食物颜色
 GREEN = (0, 255, 0)    # 蛇身颜色
 
@@ -44,11 +45,11 @@ class Game:
         self.snake = Snake()
         self.food = Food(GRID_WIDTH, GRID_HEIGHT)
         self.score = 0
-        self.difficulty = MEDIUM    # 默认难度为中等
+        self.difficulty = EASY  # 默认难度为easy
         self.speed = {
             EASY: 5,    # 简单模式速度
-            MEDIUM: 15,  # 中等模式速度
-            HARD: 20     # 困难模式速度
+            MEDIUM: 10,  # 中等模式速度
+            HARD: 25     # 困难模式速度
         }
         
     def run(self):
@@ -94,9 +95,9 @@ class Game:
         # 渲染文本
         title = title_font.render('Snake Game', True, WHITE)
         difficulty_text = menu_font.render('Select Difficulty:', True, WHITE)
-        easy_text = menu_font.render('1 - Easy', True, WHITE if self.difficulty == EASY else (128, 128, 128))
-        medium_text = menu_font.render('2 - Medium', True, WHITE if self.difficulty == MEDIUM else (128, 128, 128))
-        hard_text = menu_font.render('3 - Hard', True, WHITE if self.difficulty == HARD else (128, 128, 128))
+        easy_text = menu_font.render('1 - Easy', True, WHITE if self.difficulty == EASY else GRAY)
+        medium_text = menu_font.render('2 - Medium', True, WHITE if self.difficulty == MEDIUM else GRAY)
+        hard_text = menu_font.render('3 - Hard', True, WHITE if self.difficulty == HARD else GRAY)
         start_text = menu_font.render('Press SPACE to Start', True, WHITE)
         
         # 计算文本位置

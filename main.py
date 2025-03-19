@@ -146,7 +146,7 @@ class Game:
         
         # 随机生成毒药和星星
         if randint(0, 100) < 5:  # 5%的概率生成毒药
-            self.food.spawn_poison()
+            self.food.spawn_poison(self.snake.body)
         if randint(0, 200) < 1 and self.food.star_pos is None:  # 0.5%的概率生成星星
             self.food.spawn_star()
         
@@ -162,8 +162,13 @@ class Game:
         # 检查毒药
         for i, pos in enumerate(self.food.poison_positions):
             if snake_head == pos:
+                if self.score == 0:  # 如果分数为0且吃到毒药，直接游戏结束
+                    self.state = GAME_OVER
+                    self.food.poison_positions.pop(i)
+                    self.food.poison_spawn_times.pop(i)
+                    break
                 self.snake.shrink()
-                self.score -= 1
+                self.score = self.score // 2  # 分数减半
                 self.food.poison_positions.pop(i)
                 self.food.poison_spawn_times.pop(i)
                 break
@@ -171,7 +176,10 @@ class Game:
         # 检查星星
         if self.food.star_pos is not None and snake_head == self.food.star_pos:
             self.snake.double()
-            self.score += 2
+            if self.score == 0:  # 如果分数为0，设置为1
+                self.score = 1
+            else:
+                self.score = self.score * 2  # 分数翻倍
             self.food.star_pos = None
         
         # 检查碰撞

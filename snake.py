@@ -19,11 +19,15 @@ class Snake:
         # 绘制半圆形顶部
         pygame.draw.ellipse(self.head_up, (144, 238, 144), (2, 2, 16, 16))
         # 添加眼睛（黑色）
-        pygame.draw.circle(self.head_up, (0, 0, 0), (7, 8), 2)
-        pygame.draw.circle(self.head_up, (0, 0, 0), (13, 8), 2)
-        # 添加舌头（红色）
-        pygame.draw.line(self.head_up, (255, 0, 0), (10, 2), (10, -1), 3)
-        pygame.draw.circle(self.head_up, (255, 0, 0), (10, -1), 2.5)
+        pygame.draw.ellipse(self.head_up, (0, 0, 0), (4, 5, 5, 5))
+        pygame.draw.ellipse(self.head_up, (0, 0, 0), (10, 5, 5, 5))
+        # 添加分叉舌头（红色）
+        # 主舌头
+        pygame.draw.rect(self.head_up, (255, 0, 0), (8, -2, 4, 6))
+        # 左分叉
+        pygame.draw.line(self.head_up, (255, 0, 0), (8, -2), (6, -6), 2)
+        # 右分叉
+        pygame.draw.line(self.head_up, (255, 0, 0), (12, -2), (14, -6), 2)
 
         # 通过旋转创建其他方向的蛇头图像
         self.head_down = pygame.transform.rotate(self.head_up, 180)
@@ -243,12 +247,20 @@ class Food:
         """
         return Vector2(randint(0, self.grid_width - 1), randint(0, self.grid_height - 1))
     
-    def spawn_poison(self):
-        """生成新的毒药"""
+    def spawn_poison(self, snake_body):
+        """生成新的毒药
+        
+        Args:
+            snake_body: 蛇身体的位置列表
+        """
         if len(self.poison_positions) < 5:  # 最多5个毒药
-            new_pos = self.randomize_position()
-            self.poison_positions.append(new_pos)
-            self.poison_spawn_times.append(pygame.time.get_ticks())
+            # 生成新位置，确保不与蛇身重叠
+            while True:
+                new_pos = self.randomize_position()
+                if new_pos not in snake_body:  # 检查是否与蛇身重叠
+                    self.poison_positions.append(new_pos)
+                    self.poison_spawn_times.append(pygame.time.get_ticks())
+                    break
     
     def spawn_star(self):
         """生成新的星星"""

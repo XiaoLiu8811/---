@@ -4,6 +4,7 @@ import sys     # 系统相关功能
 from pygame.locals import *  # pygame常量，如事件类型等
 from snake import Snake, Food  # 导入蛇和食物类
 from pygame.math import Vector2  # 导入向量类
+from random import randint  # 导入随机数生成函数
 
 # 初始化Pygame
 pygame.init()
@@ -140,11 +141,38 @@ class Game:
         # 移动蛇
         self.snake.move()
         
+        # 更新食物状态
+        self.food.update()
+        
+        # 随机生成毒药和星星
+        if randint(0, 100) < 5:  # 5%的概率生成毒药
+            self.food.spawn_poison()
+        if randint(0, 200) < 1 and self.food.star_pos is None:  # 0.5%的概率生成星星
+            self.food.spawn_star()
+        
         # 检查是否吃到食物
-        if self.snake.body[0] == self.food.pos:
+        snake_head = self.snake.body[0]
+        
+        # 检查普通食物
+        if snake_head == self.food.normal_pos:
             self.snake.grow()
-            self.food.randomize_position()
             self.score += 1
+            self.food.normal_pos = self.food.randomize_position()
+        
+        # 检查毒药
+        for i, pos in enumerate(self.food.poison_positions):
+            if snake_head == pos:
+                self.snake.shrink()
+                self.score -= 1
+                self.food.poison_positions.pop(i)
+                self.food.poison_spawn_times.pop(i)
+                break
+        
+        # 检查星星
+        if self.food.star_pos is not None and snake_head == self.food.star_pos:
+            self.snake.double()
+            self.score += 2
+            self.food.star_pos = None
         
         # 检查碰撞
         if self.snake.check_collision(GRID_WIDTH, GRID_HEIGHT):
